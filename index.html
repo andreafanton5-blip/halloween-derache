@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Meet your soulmate @ Derache 37</title>
+  <style>
+    :root{--bg:#f6f7fb;--card:#ffffff;--accent:#ff6b81;--muted:#8b8f98}
+    body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;background:linear-gradient(180deg,#eef2ff, var(--bg));display:flex;align-items:center;justify-content:center;height:100vh;overflow:hidden}
+    .app{width:360px;max-width:92vw;position:relative}
+    .header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+    .brand{font-weight:700;color:#222}
+    .brand small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+
+    .deck{position:relative;height:580px}
+    .card{position:absolute;inset:0;margin:auto;max-width:100%;height:580px;border-radius:18px;background:var(--card);box-shadow:0 10px 30px rgba(20,20,50,0.08);overflow:hidden;display:flex;flex-direction:column;transform-origin:center center;touch-action:none;}
+
+    .photo{flex:1;position:relative;overflow:hidden}
+    .photo img{width:100%;height:100%;object-fit:cover;display:none;}
+    .photo img.active{display:block;}
+    .photo .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);color:white;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;}
+    .photo .nav.left{left:10px;}
+    .photo .nav.right{right:10px;}
+
+    .meta{padding:14px}
+    .name-row{display:flex;align-items:center;justify-content:space-between}
+    .name{font-size:20px;font-weight:700}
+    .age{font-size:16px;color:var(--muted);margin-left:8px}
+    .bio{margin-top:8px;color:#222;line-height:1.35;white-space:pre-wrap}
+
+    .profile-footer{font-size:12px;color:var(--muted);padding:12px;text-align:center;border-top:1px solid #f0f0f4;margin-top:auto;background:#fafbff;}
+
+    .controls{display:flex;gap:12px;justify-content:center;padding:14px}
+    .btn{width:56px;height:56px;border-radius:50%;border:0;display:inline-grid;place-items:center;background:white;box-shadow:0 6px 18px rgba(20,20,50,0.06);cursor:pointer}
+    .btn.small{width:46px;height:46px}
+    .btn.heart{background:linear-gradient(135deg,#ff7a96,#ff4f7a);color:white}
+    .btn.cross{color:#ff5a70}
+    .btn.star{color:#4f7bff}
+
+    .label{position:absolute;top:28px;padding:8px 12px;border-radius:6px;font-weight:800;letter-spacing:0.6px;transform:rotate(-12deg);opacity:0;pointer-events:none}
+    .label.like{left:22px;background:rgba(79,123,255,0.12);color:#3556ee;border:2px solid rgba(79,123,255,0.18)}
+    .label.nope{right:22px;background:rgba(255,90,112,0.12);color:#ff5a70;border:2px solid rgba(255,90,112,0.18);transform:rotate(12deg)}
+
+    .reaction{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);padding:14px 22px;border-radius:12px;font-weight:700;color:white;font-size:18px;opacity:0;transition:opacity 0.3s ease;display:flex;align-items:center;gap:8px;}
+    .reaction.green{background:#32cd32;}
+    .reaction.red{background:#ff5a70;}
+    .reaction.blue{background:#4f7bff;}
+
+    .heart-icon, .broken-heart-icon {
+      font-size:24px;
+      opacity:0;
+      animation: pop 1s ease;
+    }
+    @keyframes pop {
+      0% {transform: scale(0); opacity: 0;}
+      50% {transform: scale(1.4); opacity: 1;}
+      100% {transform: scale(1); opacity: 1;}
+    }
+
+    .footer{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+
+    @media (max-width:420px){.deck{height:540px}.card{height:540px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="brand">That's that me espresso <small>Nothing scarier than an Italian man</small></div>
+      <div style="font-size:13px;color:var(--muted)">Dating profile</div>
+    </div>
+
+    <div class="deck" id="deck">
+      <div class="card" id="card" role="region" aria-label="Profile card">
+        <div class="label like" id="likeLabel">LIKE</div>
+        <div class="label nope" id="nopeLabel">NOPE</div>
+
+        <div class="photo" id="photoArea">
+          <img src="https://statics.cedscdn.it/photos/MED_HIGH/40/07/7824007_18160126_food_2059852_1280.jpg" class="active" alt="photo1">
+          <img src="https://www.thefootballmarket.com/cdn/shop/files/fan-de-man-utd-3f-lhistoire-du-t-shirt-de-cristiano-ronaldo-vous-passionnera_6444.webp" alt="photo2">
+          <img src="https://st.ilfattoquotidiano.it/wp-content/uploads/2016/06/TIfosi-Italia675.jpg" alt="photo3">
+          <button class="nav left" id="prevBtn">❮</button>
+          <button class="nav right" id="nextBtn">❯</button>
+        </div>
+
+        <div class="meta">
+          <div class="name-row">
+            <div style="display:flex;align-items:baseline">
+              <div class="name">TIM (Toxic Italian Man)</div>
+              <div class="age">26</div>
+            </div>
+            <div style="font-size:13px;color:var(--muted)">Italy</div>
+          </div>
+          <div class="bio" id="bioText">
+Cristiano Ronaldo fan. No small talk, no small women. I don't bite... unless you're into that.
+Strictly enforcing the profile pic rule. 🤷🏻‍♂️ Making carbonara so good, it's a crime. Can't drive but I'll drive you crazy.
+I train hard, love harder, and ghost with style.
+My mom thinks I'm great and that you're cute, and she's always right. ACL injury robbed me of Champions League glory, but maybe you can help me score in other ways and swipe right to console me? 😉
+          </div>
+        </div>
+
+        <div class="profile-footer">
+          Fake profile for costume use only. Designed for Halloween fun. Sorry if you dated an Italian man like this! Be kind IRL.
+        </div>
+
+        <div class="controls">
+          <button class="btn small" id="undoBtn" title="Undo">⟲</button>
+          <button class="btn cross" id="noBtn" title="Nope">✖</button>
+          <button class="btn star" id="superBtn" title="Super">✦</button>
+          <button class="btn heart" id="yesBtn" title="Like">♥</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reaction" id="reaction"></div>
+
+  </div>
+
+  <script>
+    const card = document.getElementById('card');
+    const deck = document.getElementById('deck');
+    const likeLabel = document.getElementById('likeLabel');
+    const nopeLabel = document.getElementById('nopeLabel');
+    const reaction = document.getElementById('reaction');
+
+    const photos = document.querySelectorAll('.photo img');
+    let currentPhoto = 0;
+    document.getElementById('nextBtn').onclick = () => {
+      photos[currentPhoto].classList.remove('active');
+      currentPhoto = (currentPhoto + 1) % photos.length;
+      photos[currentPhoto].classList.add('active');
+    };
+    document.getElementById('prevBtn').onclick = () => {
+      photos[currentPhoto].classList.remove('active');
+      currentPhoto = (currentPhoto - 1 + photos.length) % photos.length;
+      photos[currentPhoto].classList.add('active');
+    };
+
+    let startX=0, startY=0, currentX=0, currentY=0, isDragging=false;
+
+    function showReaction(type){
+      if(type === 'right'){
+        reaction.innerHTML = 'Mamma mia! :) <span class="heart-icon">♥</span>';
+        reaction.className = 'reaction green';
+      } else if(type === 'left'){
+        reaction.innerHTML = 'Mamma mia! :( <span class="broken-heart-icon">💔</span>';
+        reaction.className = 'reaction red';
+      } else if(type === 'super'){
+        reaction.innerHTML = 'GOOOOOL!!!! ⚽';
+        reaction.className = 'reaction blue';
+      }
+      reaction.style.opacity = 1;
+      setTimeout(()=>{reaction.style.opacity = 0;},1800);
+    }
+
+    function setTransform(x, y, rot){
+      card.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+      const opacity = Math.min(Math.abs(x)/120, 1);
+      if(x>0){ likeLabel.style.opacity = opacity; nopeLabel.style.opacity = 0; }
+      else { nopeLabel.style.opacity = opacity; likeLabel.style.opacity = 0; }
+    }
+
+    function onPointerDown(e){
+      isDragging = true;
+      startX = e.clientX || e.touches && e.touches[0].clientX;
+      startY = e.clientY || e.touches && e.touches[0].clientY;
+      card.style.transition = 'none';
+    }
+    function onPointerMove(e){
+      if(!isDragging) return;
+      currentX = (e.clientX || e.touches && e.touches[0].clientX) - startX;
+      currentY = (e.clientY || e.touches && e.touches[0].clientY) - startY;
+      const rot = currentX / 12;
+      setTransform(currentX, currentY, rot);
+    }
+    function onPointerUp(){
+      if(!isDragging) return;
+      isDragging=false;
+      card.style.transition = 'transform 300ms ease, opacity 300ms ease';
+      const threshold = 140;
+      if(Math.abs(currentX) > threshold){
+        const rightSwipe = currentX > 0;
+        const endX = rightSwipe ? deck.clientWidth*1.2 : -deck.clientWidth*1.2;
+        card.style.transform = `translate(${endX}px, ${currentY}px) rotate(${rightSwipe?30:-30}deg)`;
+        card.style.opacity = 0;
+        showReaction(rightSwipe ? 'right' : 'left');
+        setTimeout(()=>resetCard(), 600);
+      } else {
+        setTransform(0,0,0);
+        likeLabel.style.opacity=0; nopeLabel.style.opacity=0;
+      }
+      currentX = 0; currentY = 0;
+    }
+
+    function resetCard(){
+      card.style.transition = 'none';
+      card.style.transform = '';
+      card.style.opacity = 1;
+      likeLabel.style.opacity=0; nopeLabel.style.opacity=0;
+    }
+
+    card.addEventListener('mousedown', onPointerDown);
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('mouseup', onPointerUp);
+    card.addEventListener('touchstart', onPointerDown,{passive:true});
+    window.addEventListener('touchmove', onPointerMove,{passive:true});
+    window.addEventListener('touchend', onPointerUp);
+
+    document.getElementById('noBtn').addEventListener('click', ()=>{
+      card.style.transition = 'transform 400ms ease, opacity 300ms ease';
+      card.style.transform = 'translate(-1200px, 0) rotate(-28deg)';
+      card.style.opacity = 0;
+      showReaction('left');
+      setTimeout(resetCard, 600);
+    });
+    document.getElementById('yesBtn').addEventListener('click', ()=>{
+      card.style.transition = 'transform 400ms ease, opacity 300ms ease';
+      card.style.transform = 'translate(1200px, 0) rotate(28deg)';
+      card.style.opacity = 0;
+      showReaction('right');
+      setTimeout(resetCard, 600);
+    });
+    document.getElementById('superBtn').addEventListener('click', ()=>{
+      card.style.transition = 'transform 220ms ease';
+      card.style.transform = 'scale(1.04)';
+      showReaction('super');
+      setTimeout(()=>{card.style.transform='';},220);
+    });
+    document.getElementById('undoBtn').addEventListener('click', ()=>{
+      card.style.transition='transform 200ms ease';
+      card.style.transform='translateX(-14px)';
+      setTimeout(()=>card.style.transform='translateX(14px)',120);
+      setTimeout(()=>card.style.transform='',240);
+    });
+
+    window.addEventListener('keydown',(e)=>{
+      if(e.key === 'ArrowLeft') document.getElementById('noBtn').click();
+      if(e.key === 'ArrowRight') document.getElementById('yesBtn').click();
+      if(e.key === 'ArrowUp') document.getElementById('superBtn').click();
+      if(e.key === 'u') document.getElementById('undoBtn').click();
+    });
+  </script>
+</body>
+</html>
